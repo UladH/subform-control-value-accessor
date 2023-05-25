@@ -3,5 +3,38 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
+    "subform-control-value-accessor": {
+      "projectType": "library",
+      "root": "projects/subform-control-value-accessor",
+      "sourceRoot": "projects/subform-control-value-accessor/src",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:ng-packagr",
+          "options": {
+            "project": "projects/subform-control-value-accessor/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/subform-control-value-accessor/tsconfig.lib.prod.json"
+            },
+            "development": {
+              "tsConfig": "projects/subform-control-value-accessor/tsconfig.lib.json"
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "tsConfig": "projects/subform-control-value-accessor/tsconfig.spec.json",
+            "polyfills": [
+              "zone.js",
+              "zone.js/testing"
+            ]
+          }
+        }
+      }
+    }
   }
 }
