@@ -1,12 +1,20 @@
-import { Component, Host, Optional, SkipSelf } from '@angular/core';
-import { ControlContainer } from '@angular/forms';
+import { Component, Host, Optional, SkipSelf, forwardRef } from '@angular/core';
+import { ControlContainer, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { ControlValueAccessorComponent } from 'subform-control-value-accessor'; //import abstract class
+
+//create provider for ControlValueAccessor
+const CUSTOM_VALUE_ACCESSOR = {       
+  provide: NG_VALUE_ACCESSOR, 
+  useExisting: forwardRef(() => CustomComponent),
+  multi: true     
+};
 
 @Component({
   selector: 'custom-component',
-  templateUrl: './custom-component.component.html',
+  templateUrl: './custom.component.html',
+  providers: [CUSTOM_VALUE_ACCESSOR] //set provider
 })
-export class CustomComponentComponent extends ControlValueAccessorComponent<string>  { //extend class with ControlValueAccessorComponent<T>. 
+export class CustomComponent extends ControlValueAccessorComponent<string>  { //extend class with ControlValueAccessorComponent<T>. 
   //ControlValueAccessorComponent<T> is generic class. Set your parameter type.
 
   /**

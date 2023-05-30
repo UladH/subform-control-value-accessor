@@ -168,11 +168,14 @@ export abstract class ControlValueAccessorComponent<T> implements OnInit, Contro
     }
 
     Object.keys(this.control!.errors!).forEach((errorName: string) => {
-      const error = this.errorMessages[errorName];
+      const errorCode = Object.keys(this.errorMessages)
+        .find((key) => key.toLowerCase() === errorName.toLowerCase());
 
-      if (!error) {
+      if (!errorCode) {
         return;
       }
+
+      const error = this.errorMessages[errorCode];
 
       if(typeof error === 'function'){ 
         const errorFunc = error as (control: AbstractControl) => string;       

@@ -1,0 +1,29 @@
+<p>Example 2.1. Using ngModel. Error messages doesn't work</p>
+
+<custom-component [(ngModel)]="data"></custom-component>
+
+<p>{{ data }}</p>
+
+<p>Example 2.2. Custom component as a form control</p>
+
+<form [formGroup]="form">
+
+    <label for="custom">Custom Control</label>
+    <custom-component
+        formControlName="custom" 
+        name="custom"
+        style="display: block;"
+        [errorMessages]="errorMessages">
+    </custom-component>
+
+    <label for="default">Default Control</label>
+    <input formControlName="default" name="default"style="display: block;"/>
+    <ng-container *ngIf="this.form.controls['default'].invalid">
+        <p style="color:red" *ngIf="this.form.controls['default'].errors?.['required']">Field is required</p>
+        <p style="color:red" *ngIf="this.form.controls['default'].errors?.['minlength']">Min length is 4 characters</p>
+    </ng-container>
+</form>
+
+<p>Form valid: {{ form.valid }}</p>
+<p>Form value: {{ form.value | json }}</p>
+
