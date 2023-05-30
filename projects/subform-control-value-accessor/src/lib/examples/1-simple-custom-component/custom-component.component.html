@@ -1,0 +1,8 @@
+{{'' //simple custom component}}
+
+{{'' //ControlValueAccessorComponent has 2 getters and setters for linked data: "value" and "data"}}
+{{'' //implemented in custom class "data" property is INTERNAL property without "onChange" event. It is used by "writeValue" method }}
+{{'' //"value" propery is PUBLIC property with "onChange" event. You should use only this ("value") property for internal [(ngModel)] binding}}
+
+<input [(ngModel)]="value">
+<p *ngFor="let error of activeErrorMessages">{{ error }}</p> 
