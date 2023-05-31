@@ -1,6 +1,16 @@
 {
   "name": "subform-control-value-accessor",
-  "version": "0.0.0",
+  "version": "1.0.0",
+  "description": "Implemnted ControlValueAccessor interface abstract classes",
+  "url" : "https://github.com/UladH/subform-control-value-accessor",
+  "email" : "uladzislau.holub@gmail.com",  
+  "license" : "MIT",
+  "author": "Uladzislau Holub <uladzislau.holub@gmail.com>",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/UladH/subform-control-value-accessor"
+  },
+  "keywords": ["angular", "web", "component", "control", "control value accessor"],
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
