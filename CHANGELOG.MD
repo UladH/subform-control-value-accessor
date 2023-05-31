@@ -10,3 +10,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Major changes
 
 - Added abstract class ControlValueAccessorComponent<T> implementing the interface ControlValueAccessor for simple custom form controls
+- Added examples
