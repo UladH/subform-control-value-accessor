@@ -15,7 +15,7 @@ export class ParentComponent implements OnInit {
    */
   public ngOnInit(): void {
     this.form = this.formBuilder.group({
-      custom: [{firstName: 'azaza', lastName: 'ahaha'}],
+      custom: [{firstName: 'Jane', lastName: 'Doe'}],
     });
   }
 }

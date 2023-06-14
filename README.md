@@ -390,10 +390,376 @@ Create component template and link control to form
 <p>Form valid: {{ form.valid }}</p>
 <p>Form value: {{ form.value | json }}</p>
 
+```
+
+### FormControlValueAccessorComponent<T>
+
+FormControlValueAccessorComponent<T> is abstract class for custom subform controls.
+This class extends ControlValueAccessorComponent<T> and adds new functionality for subform controls.
+
+#### Properties
+Only new or overided properties are described here
+
+<table>
+  <tr>
+    <th>Property</th>
+    <th>Decorator, Modificator</th>
+    <th>Type</th>
+    <th>Default Value</th>
+    <th>Example</th>
+    <th>Description</th>
+  </tr>
+  <tr>
+    <td>componentSubscriptions</td>
+    <td>protected</td>
+    <td>Subscription</td>
+    <td></td>
+    <td></td>        
+    <td>Object contains all component subscriptions</td>
+  </tr>
+  <tr>
+    <td>form</td>
+    <td>public abstract get</td>
+    <td>FormGroup</td>
+    <td></td>
+    <td></td>        
+    <td>Component form getter</td>
+  </tr>
+  <tr>
+    <td>data</td>
+    <td>protected set/get</td>
+    <td>T | null</td>
+    <td></td>
+    <td></td>        
+    <td>ControlValueAccessorComponent data property implementation. Setter calls <b>patchForm</b> method. Getter returns <b>form</b>.value</td>
+  </tr>
+<table>
+
+### Methods
+
+Only new or overided methods are described here
+
+<table>
+    <tr>
+        <th>Method</th>
+        <th>Modificator</th>
+        <th>Arguments</th>
+        <th>Return type</th>
+        <th>Description</th>
+    </tr>
+    <tr>
+        <td>ngOnInit</td>
+        <td>public override</td>
+        <td></td>
+        <td>void</td>
+        <td>This method extends ControlValueAccessorComponent ngOnInit method. Calls <b>initForm</b> and <b>addSubscriptions</b> methods</td>
+    </tr>
+    <tr>
+        <td>ngOnDestroy</td>
+        <td>public</td>
+        <td></td>
+        <td>void</td>
+        <td>OnDestroy interface implementation. This method calls <b>removeSubscriptions</b> method</td>
+    </tr>
+    <tr>
+        <td>ngAfterViewInit</td>
+        <td>public</td>
+        <td></td>
+        <td>void</td>
+        <td>AfterViewInit interface implementation. This method realize parent form value update hook for control default values</td>
+    </tr>
+    <tr>
+        <td>validate</td>
+        <td>public</td>
+        <td>control?: AbstractControl</td>
+        <td>ValidationErrors | null</td>
+        <td>Validator interface implementation. This method returns <b>form</b> error to parent form when component has internal validation errors</td>
+    </tr>
+    <tr>
+        <td>initForm</td>
+        <td>protected abstract</td>
+        <td>value: T | null</td>
+        <td>void</td>
+        <td>Abstract form initialization method</td>
+    </tr>
+    <tr>
+        <td>patchForm</td>
+        <td>protected abstract</td>
+        <td>value: T | null</td>
+        <td>void</td>
+        <td>Abstract form patching method</td>
+    </tr>
+    <tr>
+        <td>onFormValueChangedHandler</td>
+        <td>protected</td>
+        <td>value: T | null</td>
+        <td>void</td>
+        <td><b>form.valueChanges</b> event handler. Triggers component <b>onChangeCallback</b> event</td>
+    </tr>
+    <tr>
+        <td>addSubscriptions</td>
+        <td>protected</td>
+        <td></td>
+        <td>void</td>
+        <td>Method adds component subscriptions to <b>componentSubscriptions</b> property</td>
+    </tr>
+    <tr>
+        <td>removeSubscriptions</td>
+        <td>protected</td>
+        <td></td>
+        <td>void</td>
+        <td>Method removes component subscriptions from <b>componentSubscriptions</b> property</td>
+    </tr>
+</table>
+
+### Creating simple custom form control
+
+#### Module
+
+Add **ReactiveFormsModule** to your module
+
+```ts
+
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+
+@NgModule({
+  declarations: [
+    CustomFormComponent
+  ],
+  imports: [
+    CommonModule,
+    FormsModule,
+    ReactiveFormsModule
+  ]
+})
+export class CustomFormModule { }
 
 ```
 
+#### Component class
 
+Extend your class component from **FormControlValueAccessorComponent<T>** and set your control data type
+
+```ts
+
+export class CustomFormComponent extends FormControlValueAccessorComponent<FormModel>
+
+```
+
+Provide **ControlContainer** and **FormBuilder** objects to constructor
+
+```ts
+
+constructor(
+    @Optional() @Host() @SkipSelf() controlContainer: ControlContainer,
+    private formBuilder: FormBuilder) {
+    super(controlContainer);
+  }
+
+```
+
+Implement **form** abstract getter
+
+```ts
+
+private _form!: FormGroup;
+
+public get form(): FormGroup {
+  return this._form;  
+}
+
+```
+
+Implement **initForm** and **patchForm** methods
+
+```ts
+
+protected initForm(): void {
+    this._form = this.formBuilder.group({
+      firstName: ['John', [Validators.required]], //default form data
+      lastName: ['Doe', [Validators.required]] //default form data
+    });
+}
+
+protected patchForm(value: FormModel | null): void {
+    value && this.form.patchValue(value);
+}
+
+```
+
+Create providers for **NG_VALUE_ACCESSOR** and **NG_VALIDATORS** and your component
+
+```ts
+
+const CUSTOM_FORM_VALUE_ACCESSOR = {       
+  provide: NG_VALUE_ACCESSOR, 
+  useExisting: forwardRef(() => CustomFormComponent),
+  multi: true     
+};
+
+const CUSTOM_FORM_VALIDATORS = {
+  provide: NG_VALIDATORS, 
+  useExisting: forwardRef(() => CustomFormComponent), 
+  multi: true
+};
+
+@Component({
+  selector: 'custom-form',
+  templateUrl: './custom-form.component.html',
+  providers: [ CUSTOM_FORM_VALUE_ACCESSOR, CUSTOM_FORM_VALIDATORS ] // Add providers to component decorator
+})
+
+```
+
+Full component code. You can find this code in examples.
+
+```ts
+
+import { Component, Host, Optional, SkipSelf, forwardRef } from '@angular/core';
+import { ControlContainer, FormBuilder, FormGroup, NG_VALIDATORS, NG_VALUE_ACCESSOR, Validators } from '@angular/forms';
+import { FormControlValueAccessorComponent } from 'subform-control-value-accessor';
+
+/**
+ * Component data structure
+ */
+interface FormModel {
+  firstName: string;
+  lastName: string
+}
+
+/**
+ * NG_VALUE_ACCESSOR provider for custom control
+ */
+const CUSTOM_FORM_VALUE_ACCESSOR = {       
+  provide: NG_VALUE_ACCESSOR, 
+  useExisting: forwardRef(() => CustomFormComponent),
+  multi: true     
+};
+
+/**
+ * NG_VALIDATORS provider for custom control
+ */
+const CUSTOM_FORM_VALIDATORS = {
+  provide: NG_VALIDATORS, 
+  useExisting: forwardRef(() => CustomFormComponent), 
+  multi: true
+};
+
+@Component({
+  selector: 'custom-form',
+  templateUrl: './custom-form.component.html',
+  providers: [ CUSTOM_FORM_VALUE_ACCESSOR, CUSTOM_FORM_VALIDATORS ] // Add providers to component decorator
+})
+export class CustomFormComponent extends FormControlValueAccessorComponent<FormModel> { // extend FormControlValueAccessorComponent and set your data type
+  private _form!: FormGroup;
+  
+  constructor(
+    @Optional() @Host() @SkipSelf() controlContainer: ControlContainer,
+    private formBuilder: FormBuilder) {
+    super(controlContainer);
+  }
+
+  /**
+   * Implememt form getter
+   */
+  public get form(): FormGroup {
+    return this._form;  
+  }
+
+  /**
+   * Implement form initialization method
+   */
+  protected initForm(): void {
+    this._form = this.formBuilder.group({
+      firstName: ['John', [Validators.required]], //default form data
+      lastName: ['Doe', [Validators.required]] //default form data
+    });
+  }
+
+  /**
+   * Implement for patching method
+   */
+  protected patchForm(value: FormModel | null): void {
+    value && this.form.patchValue(value);
+  }
+}
+
+```
+
+#### Component html
+
+Create component template and link **formGroup** to **"form"** property
+
+```html
+
+<form [formGroup]="form">
+
+    <label for="firstName">First Name</label>
+    <input formControlName="firstName" name="default" style="display: block;"/>
+    <ng-container *ngIf="this.form.controls['firstName'].invalid">
+        <p style="color:red" *ngIf="this.form.controls['firstName'].errors?.['required']">Field is required</p>
+    </ng-container>
+    
+    <label for="lastName">Last Name</label>
+    <input formControlName="lastName" name="default" style="display: block;"/>
+    <ng-container *ngIf="this.form.controls['lastName'].invalid">
+        <p style="color:red" *ngIf="this.form.controls['lastName'].errors?.['required']">Field is required</p>
+    </ng-container>
+</form>
+
+```
+
+### Using custom control in parent component
+
+#### Parent component class
+
+Create and initialize FormGroup object
+
+```ts
+
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup } from '@angular/forms';
+
+@Component({
+  selector: 'parent',
+  templateUrl: './parent.component.html'
+})
+export class ParentComponent implements OnInit {
+  constructor(private formBuilder: FormBuilder){}
+
+  public form!: FormGroup;
+
+  /**
+   * Initialize form. You can set default value to custom component. If you set null then component uses component default value
+   */
+  public ngOnInit(): void {
+    this.form = this.formBuilder.group({
+      custom: [{firstName: 'Jane', lastName: 'Doe'}],
+    });
+  }
+}
+
+```
+
+#### Parent component html
+
+Create form template and provide custom component as form control
+
+```html
+
+<form [formGroup]="form">
+    <custom-form formControlName="custom"></custom-form>
+</form>
+
+<p>Form Valid: {{ form.valid }}</p>
+<p>Form Value: {{ form.value | json }}</p>
+
+```
+
+# Summary
+
+All examples you can find in [git project page](https://github.com/UladH/subform-control-value-accessor)
+Good luck!
 
 
 

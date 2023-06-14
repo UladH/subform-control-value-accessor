@@ -98,11 +98,11 @@ export abstract class FormControlValueAccessorComponent<T> extends ControlValueA
    * 
    * @public
    */
-  public set data(value: T | null) {
+  protected set data(value: T | null) {
     this.patchForm(value);
   }
 
-  public get data(): T | null {
+  protected get data(): T | null {
     return this.form.value;
   }
 
