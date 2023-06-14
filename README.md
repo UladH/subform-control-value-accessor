@@ -34,14 +34,12 @@ This implementation support not only ControlValueAccessor interface functions bu
         <td>@Input() public</td>
         <td>[key: string]: string | ((control: AbstractControl) => string)</td>
         <td>{}</td>
-        <td>
-            <code style="display: block; white-space: pre">
+        <td style="display: block; white-space: pre">
 {
     'required': 'Field is required',
     'minlength': (control: AbstractControl) 
         => 'Min length is 4 characters'
 }
-            </code>
         </td>        
         <td>Error messages object. <b>ControlValueAccessorComponent</b> support displaying errors managment. Current realization check all active errors and sort all messages to showing it in component html. <b>key</b> is error message</td>
     </tr>
@@ -50,11 +48,7 @@ This implementation support not only ControlValueAccessor interface functions bu
         <td>@Input() public</td>
         <td>string | null</td>
         <td>null</td>
-        <td>
-            <code style="display: block; white-space: pre">
-"login"
-            </code>
-        </td>        
+        <td>"login"</td>        
         <td>This property is used in form for getting correct control object</td>
     </tr>
     <tr>
@@ -62,11 +56,7 @@ This implementation support not only ControlValueAccessor interface functions bu
         <td>@Input() public</td>
         <td>boolean</td>
         <td>false</td>
-        <td>
-            <code style="display: block; white-space: pre">
-false
-            </code>
-        </td>        
+        <td> false </td>        
         <td>This property is part of ControlValueAccessor implementation. Developer should realize this functionallity in custom control html for correct realization, but this property doesn't affect the basic functionality </td>
     </tr>
     <tr>
@@ -90,11 +80,7 @@ false
         <td>public get</td>
         <td>string[]</td>
         <td></td>
-        <td>
-            <code style="display: block; white-space: pre">
-['Field is required', 'Min length is 4 characters']
-            </code>
-        </td>        
+        <td>['Field is required', 'Min length is 4 characters']</td>        
         <td>Returns array of messages for active errors</td>
     </tr>
     <tr>
