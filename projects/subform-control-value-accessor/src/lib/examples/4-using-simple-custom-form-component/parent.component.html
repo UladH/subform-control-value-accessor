@@ -1,0 +1,8 @@
+<p>Example 4. Using form custom component as form control</p>
+
+<form [formGroup]="form">
+    <custom-form formControlName="custom"></custom-form>
+</form>
+
+<p>Form Valid: {{ form.valid }}</p>
+<p>Form Value: {{ form.value | json }}</p>

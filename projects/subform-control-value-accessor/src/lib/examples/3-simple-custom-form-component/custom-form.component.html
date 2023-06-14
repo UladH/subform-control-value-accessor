@@ -1,0 +1,16 @@
+{{ '' //simple form control }}
+
+<form [formGroup]="form">
+
+    <label for="firstName">First Name</label>
+    <input formControlName="firstName" name="default" style="display: block;"/>
+    <ng-container *ngIf="this.form.controls['firstName'].invalid">
+        <p style="color:red" *ngIf="this.form.controls['firstName'].errors?.['required']">Field is required</p>
+    </ng-container>
+    
+    <label for="lastName">Last Name</label>
+    <input formControlName="lastName" name="default" style="display: block;"/>
+    <ng-container *ngIf="this.form.controls['lastName'].invalid">
+        <p style="color:red" *ngIf="this.form.controls['lastName'].errors?.['required']">Field is required</p>
+    </ng-container>
+</form>
